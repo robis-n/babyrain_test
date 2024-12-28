@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morphing Blobs Blog</title>
+    
+    <link rel="stylesheet" href="https://use.typekit.net/yqn2qxq.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/nav.css">
+    
+    <script src="js/nav.js"></script>
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav__logo">
+            <a href="#">BABYRAIN</a>
+        </div>
+        <div id="mainListDiv" class="main_list nav__wrapper">
+            <ul class="navlinks nav__wrapper__list">
+                <li class="nav__wrapper__list__item"><a href="index.html">Writing</a></li>
+                <li class="nav__wrapper__list__item"><a href="pages/about.html">About</a></li>
+                <li class="nav__wrapper__list__item"><a href="pages/apply.html">Apply</a></li>
+            </ul>
+        </div>
+        <span class="navTrigger nav__toggle-btn">
+            <i></i>
+            <i></i>
+            <i></i>
+        </span>
+    </nav>
+    <div class="layout-container">
+        <div class="title-page">
+            <h1 class="title-text">essays</h1>
+            <h3>&nbspnovember 9</h3>
+    
+        </div>
+        <div class="column">
+            <h2 class="title"><a href="pages/essays/choice.html">Choice</a></h2>
+            <div class="blob-wrapper">
+                <div class="blob-container blob" id="blob1"></div>
+                <div class="text-content">
+                    <p>I step forward, and the automatic doors open. Fluorescent lights beam overhead. Towering shelves frame my field of view as I slowly peruse each aisle. <span class="blob-placeholder"></span> Mascots on cereal boxes, meticulously written nutritional contents and allergen warnings, stickers highlighting...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <h2 class="title">When the tears start to curdle.</h2>
+            <div class="blob-wrapper">
+                <div class="blob-container blob" id="blob2"></div>
+                <div class="text-content">
+                    <p>There is blankness in place of memories. There is nothing in spots where something should be, not even a hint or glimpse. <span class="blob-placeholder"></span> I have never been able to grasp that nothingness, and I have never been able to make sense of it. All the years and dates mentioned are approximations. I am still determining how close or far apart most of these events occurred...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <h2 class="title">All of a sudden everybody was laughing at me.</h2>
+            <div class="blob-wrapper">
+                <div class="blob-container blob" id="blob3"></div>
+                <div class="text-content">
+                    <p>Comedy is like magic. It's like a magician showing tricks to a little boy - the magician hopes he falls for it and the boy hopes to not expect what's about to happen. I don't think there exists a good joke where the comic played on the expected - that's not comedy, it's formality...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <h2 class="title">The week felt like there was a full moon.</h2>
+            <div class="blob-wrapper">
+                <div class="blob-container blob" id="blob4"></div>
+                <div class="text-content">
+                    <p>I have submitted my first college application. I fail to reflect on the fact and recognize its significance after two years of anticipation. I have a week to submit my portfolio, and another two until my interview, and then another month until a decision. Maybe then I will have understood…</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <h2 class="title">Home</h2>
+            <div class="blob-wrapper">
+                <div class="blob-container blob" id="blob5"></div>
+                <div class="text-content">
+                    <p>“Bliny?” Despite this memory being well over a decade old, I distinctly remember the teaching assistant’s soft-spoken inquiry encouraging me to speak. I had spent the previous hours meticulously rolling out clay on my small part of the table, afraid and unable to socialise. It was my first day at school…</p>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="footer__content">
+                <span>babyrain</span>
+                <a href="tel:+37129339415">+371 29339415</a>
+                <a href="mailto:braarmarr@gmail.com">braarmarr@gmail.com</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/MorphingBlob.js"></script>
+    <script>
+        function getBlobSize() {
+            const width = window.innerWidth;
+            let size;
+            
+            if (width <= 768) {
+                // Mobile: single column
+                size = Math.min(width - 32, 500);
+            } else if (width <= 1200) {
+                // Tablet: two columns
+                size = Math.min((width - 64) / 2, 500);
+            } else {
+                // Desktop: three columns
+                size = Math.min((width - 96) / 3, 500);
+            }
+            
+            return { 
+                width: size,
+                height: size // Make it square
+            };
+        }
+
+        function initializeBlobs() {
+            const size = getBlobSize();
+            
+            // Update wrapper heights to match content
+            document.querySelectorAll('.blob-wrapper').forEach(wrapper => {
+                wrapper.style.height = `${size.height}px`;
+            });
+            
+            const colors = [
+                new THREE.Color(0.8, 0.8, 0.5),  // Green tint
+                new THREE.Color(0.9, 0.6, 0.6),  // Purple tint
+                new THREE.Color(1, 0.9, 0.9)   // Pink tint
+            ];
+
+            document.querySelectorAll('.blob').forEach((blob, index) => {
+                const commonConfig = {
+                    size: size,
+                    amplitude: window.innerWidth <= 768 ? 0.15 : 0.25,
+                    frequency: 0.4,
+                    density: window.innerWidth <= 768 ? 1.8 : 2.5,
+                    strength: window.innerWidth <= 768 ? 0.15 : 0.2,
+                    radius: window.innerWidth <= 768 ? 1.5 : 2.0,
+                    detail: window.innerWidth <= 768 ? 3 : 4,
+                    color: colors[index % colors.length] // Edit colors here
+                };
+                
+                new MorphingBlob(blob.id, commonConfig);
+            });
+        }
+
+        // Make elements visible with a delay
+        function makeVisible() {
+            document.querySelectorAll('.column').forEach((column, index) => {
+                setTimeout(() => {
+                    column.classList.add('visible');
+                    column.querySelector('.blob-container').classList.add('visible');
+                    column.querySelector('.text-content').classList.add('visible');
+                }, index * 200);
+            });
+        }
+
+        // Initialize and make visible when page loads
+        window.addEventListener('load', () => {
+            // Small delay to ensure content is properly laid out
+            setTimeout(() => {
+                initializeBlobs();
+                makeVisible();
+            }, 100);
+        });
+
+        // Reinitialize blobs when window is resized
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Remove old blobs
+                document.querySelectorAll('.blob-container canvas').forEach(canvas => canvas.remove());
+                // Reinitialize with new size
+                initializeBlobs();
+            }, 250); // Debounce resize events
+        });
+    </script>
+</body>
+</html>

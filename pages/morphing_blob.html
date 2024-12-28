@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Morphing Blob</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        window.addEventListener('load', function() {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000);
+            document.body.appendChild(renderer.domElement);
+
+            // Create a sphere with more segments for smoother morphing
+            const geometry = new THREE.SphereGeometry(1, 64, 64);
+
+            // Custom shader material
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    color: { value: new THREE.Color(0.5, 0.8, 1.0) }
+                },
+                vertexShader: `
+                    uniform float time;
+                    varying vec2 vUv;
+                    varying vec3 vNormal;
+                    
+                    void main() {
+                        vUv = uv;
+                        vNormal = normal;
+                        
+                        // Create morphing effect
+                        vec3 pos = position;
+                        float noise = sin(time * 2.0 + position.y * 4.0) * 0.15;
+                        noise += sin(time * 3.0 + position.x * 5.0) * 0.15;
+                        pos += normal * noise;
+                        
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform float time;
+                    uniform vec3 color;
+                    varying vec2 vUv;
+                    varying vec3 vNormal;
+                    
+                    void main() {
+                        // Create iridescent effect
+                        vec3 baseColor = color;
+                        vec3 rainbow = vec3(
+                            sin(time + vUv.x * 6.28) * 0.5 + 0.5,
+                            sin(time * 1.2 + vUv.x * 6.28) * 0.5 + 0.5,
+                            sin(time * 1.4 + vUv.x * 6.28) * 0.5 + 0.5
+                        );
+                        
+                        // Add normal-based lighting
+                        float light = dot(vNormal, normalize(vec3(1.0, 1.0, 1.0))) * 0.5 + 0.5;
+                        
+                        // Mix colors for final effect
+                        vec3 finalColor = mix(baseColor, rainbow, 0.5) * light;
+                        gl_FragColor = vec4(finalColor, 1.0);
+                    }
+                `,
+                transparent: true
+            });
+
+            const blob = new THREE.Mesh(geometry, material);
+            scene.add(blob);
+
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xffffff, 1);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            camera.position.z = 3;
+
+            // Animation loop
+            function animate(time) {
+                requestAnimationFrame(animate);
+                
+                time *= 0.001; // Convert to seconds
+                material.uniforms.time.value = time;
+                
+                blob.rotation.x = time * 0.3;
+                blob.rotation.y = time * 0.5;
+                
+                renderer.render(scene, camera);
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            animate(0);
+        });
+    </script>
+</body>
+</html>

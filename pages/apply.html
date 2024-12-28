@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Morphing Blobs Blog</title>
+        
+        <link rel="stylesheet" href="https://use.typekit.net/yqn2qxq.css">
+
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="../css/nav.css">
+        <link rel="stylesheet" href="../css/apply.css">
+        
+        <script src="../js/nav.js"></script>
+    </head>
+    <body>
+        <nav class="nav">
+            <div class="nav__logo">
+                <a href="index.html">BABYRAIN</a>
+            </div>
+            <div id="mainListDiv" class="main_list nav__wrapper">
+                <ul class="navlinks nav__wrapper__list">
+                    <li class="nav__wrapper__list__item"><a href="../index.html">Writing</a></li>
+                    <li class="nav__wrapper__list__item"><a href="about.html">About</a></li>
+                    <li class="nav__wrapper__list__item"><a href="apply.html">Apply</a></li>
+                </ul>
+            </div>
+            <span class="navTrigger nav__toggle-btn">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+        </nav>
+        <div class="layout-container">
+            <div class="column">
+                <form id="applicationForm" action="https://formsubmit.co/robis.niko@gmail.com" method="POST" enctype="text/plain">
+                    <div class="form-group">
+                        <p class="join">apply to join the team!</p>
+                        <label for="name">name, surname</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">your message</label>
+                        <p class="form-hint">Write a message about absolutely anything! Could be a fantastical story, academic essay or a short opinion about your favorite posters - write honestly, and, if we like your writing, you can join us for the next issue!</p>
+                        <textarea id="message" name="message" rows="10" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Application</button>
+                </form>
+            </div>
+            <footer class="footer">
+                <div class="footer__content">
+                    <span>babyrain</span>
+                    <a href="tel:+37129339415">+371 29339415</a>
+                    <a href="mailto:braarmarr@gmail.com">braarmarr@gmail.com</a>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
