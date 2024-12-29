@@ -1,29 +1,3 @@
-@font-face {
-    src: url('../../../../../fonts/hwt/fonts/fonnts.com-HWT-Aetna-Double-Ex-Condensed.otf') format('otf');
-    
-    font-family: "hwt-aetna-extra-condensed", serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    src: url('../../../../../fonts/babyrayb_cortex_font.woff2') format('woff2');
-    font-family: "fisterra-fora";
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    src: url('../../../../../fonts/EB_GaramondSource_Sans_3/Source_Sans_3/static/SourceSans3-Regular.ttf') format('ttf');
-    font-family: "paragraph";
-    font-weight: 400;
-    font-style: normal;
-}
-
-
-html, body {
-    font-family: "hwt-aetna-extra-condensed", serif;
-}
 
 html {
     margin: 15vh 0 0 0;
@@ -34,6 +8,7 @@ html {
 }
 
 body {
+    font-family: "EB Garamond", serif;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -81,7 +56,6 @@ body::-webkit-scrollbar {
 }
 
 p{
-    font-family: "paragraph";
     font-size: 2rem;
 }
 
@@ -116,7 +90,6 @@ footer {
 
 .form-group label {
     display: block;
-    font-family: "paragraph";
     font-size: 2rem;
     margin-bottom: 0.5rem;
 }
@@ -130,7 +103,6 @@ footer {
 input, textarea {
     width: 100%;
     padding: 0.8rem;
-    font-family: "paragraph";
     font-size: 1.6rem;
     border: 1px solid #333;
     background: transparent;

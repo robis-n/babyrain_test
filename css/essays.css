@@ -1,29 +1,3 @@
-@font-face {
-    src: url('../font/fonnts.com-HWT-Aetna-Double-Ex-Condensed.otf') format('otf');
-    
-    font-family: "hwt-aetna-extra-condensed", serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    src: url('../font/babyrayb_cortex_font.woff2') format('woff2');
-    font-family: "fisterra-fora";
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    src: url('../font/SourceSans3-Regular.ttf') format('ttf');
-    font-family: "paragraph";
-    font-weight: 400;
-    font-style: normal;
-}
-
-
-html, body {
-    font-family: "hwt-aetna-extra-condensed", serif;
-}
 
 html {
     margin: 15vh 0 0 0;
@@ -34,6 +8,7 @@ html {
 }
 
 body {
+    font-family: "EB Garamond", serif;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -78,7 +53,7 @@ body {
 
 .vards {
     width: 100%;
-    font-family: "fisterra-fora";
+    font-family: "EB Garamond", serif;
     font-size: 2rem;
     margin-bottom: 0; /* Reduce margin */
     color: black;
@@ -109,9 +84,9 @@ body {
 p{
     margin-bottom: 10px;
     font-size: 1.5rem;
-    font-family: "paragraph";
     line-height: 1.7rem;
     letter-spacing: 0.3px;
+    text-align: justify;
 }
 
 @media (max-width: 768px) {

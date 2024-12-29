@@ -7,6 +7,7 @@ body {
 }
 
 .nav {
+    font-family: "hwt-aetna-extra-condensed", serif;
     opacity: 0.9;
     z-index: 10000000;
     width: 100%;
@@ -391,6 +392,7 @@ body {
 
 /* Footer Styles */
 .footer {
+    font-family: "hwt-aetna-extra-condensed", serif;
     opacity: 0.9;
     z-index: 1000;
     width: 100%;

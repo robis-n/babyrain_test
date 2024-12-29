@@ -1,20 +1,9 @@
-@font-face {
-    src: url('../font/fonnts.com-HWT-Aetna-Double-Ex-Condensed.otf') format('otf');
-    
-    font-family: "hwt-aetna-extra-condensed", serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    src: url('../font/babyrayb_cortex_font.woff2') format('woff2');
-    font-family: "fisterra-fora";
-    font-weight: 400;
-    font-style: normal;
-}
 
 html, body {
-    font-family: "hwt-aetna-extra-condensed", serif;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
 }
 
 html {
@@ -79,7 +68,7 @@ body {
 }
 
 .title {
-    font-family: "fisterra-fora";
+    font-family: "EB Garamond", serif;
     font-size: 1.5rem;
     margin-bottom: 1px; /* Reduce margin */
     color: black;
@@ -129,7 +118,8 @@ body {
 }
 
 .text-content {
-    font-family: "fisterra-fora";
+    font-family: "EB Garamond", serif;
+    color: #333;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -180,6 +170,7 @@ body::-webkit-scrollbar {
 
 
 .title-page {
+    font-family: "hwt-aetna-extra-condensed", serif;
     width: 100%;
     letter-spacing: 0.6rem;
     font-size: 7vw;
