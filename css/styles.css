@@ -66,7 +66,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem; /* Add small gap between title and blob */
+    gap: 1rem; /* Add small gap between title and blob */
     margin: 0;  /* Ensure consistent margin */
     box-sizing: border-box;
 }
@@ -215,7 +215,7 @@ body::-webkit-scrollbar {
     background: black;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 475px) {
     .layout-container {
         gap: 1rem;
     }
@@ -224,6 +224,7 @@ body::-webkit-scrollbar {
         margin-bottom: 2rem;
         margin-top: 2rem;
         position: relative;
+        gap: 6rem;
     }
 
     .title {
