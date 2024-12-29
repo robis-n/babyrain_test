@@ -68,6 +68,7 @@ body {
     align-items: center;
     gap: 0.5rem; /* Add small gap between title and blob */
     margin: 0;  /* Ensure consistent margin */
+    box-sizing: border-box;
 }
 
 
@@ -80,19 +81,21 @@ body {
 .title {
     font-family: "fisterra-fora";
     font-size: 1.5rem;
-    margin-bottom: 0; /* Reduce margin */
+    margin-bottom: 1px; /* Reduce margin */
     color: black;
     text-decoration: none;
     font-weight: normal;
     text-align: center;
     position: relative; /* For visual connection */
     bottom: -3rem;
-    z-index: 1000;
+    z-index: 1000000;
+    box-sizing: border-box;
 }
 
 .title a{
     text-decoration: none;
     color: black;
+    z-index: 1000000;
 }
 
 .title::after {
@@ -145,7 +148,7 @@ p {
     font-weight: 300;
     letter-spacing: 0.5px;
     position: relative;
-    z-index: 2;
+    z-index: 0;
     word-wrap: break-word;
     max-width: 85%;
     padding: 0;
@@ -210,4 +213,41 @@ body::-webkit-scrollbar {
     width: 40%;
     height: 1px;
     background: black;
+}
+
+@media (max-width: 400px) {
+    .layout-container {
+        gap: 1rem;
+    }
+
+    .column {
+        margin-bottom: 2rem;
+        margin-top: 2rem;
+        position: relative;
+    }
+
+    .title {
+        position: relative;
+        margin: 4rem;
+        z-index: 1000000000;
+        padding: 0.5rem;
+        width: 100%;
+
+    }
+
+    .blob-wrapper {
+        margin-top: 1rem;
+    }
+
+    .text-content {
+        padding-top: 1rem;
+    }
+    
+    p{
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 400px) {
+    
 }
