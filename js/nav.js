@@ -16,7 +16,7 @@ $(document).ready(function() {
         
             if (currentScroll > lastScrollTop && !$('.nav__toggle-btn').hasClass('active')) { 
                 // Scrolling down 
-                navbar.style.top = '-20vh'; // Hide navbar with smooth transition 
+                navbar.style.top = '-50vh'; // Hide navbar with smooth transition 
             } else { 
                 // Scrolling up 
                 navbar.style.top = '0'; // Show navbar 
