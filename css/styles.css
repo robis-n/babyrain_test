@@ -1,5 +1,5 @@
 @font-face {
-    src: url('../../../../../fonts/hwt/fonts/fonnts.com-HWT-Aetna-Double-Ex-Condensed.otf') format('otf');
+    src: url('../font/fonnts.com-HWT-Aetna-Double-Ex-Condensed.otf') format('otf');
     
     font-family: "hwt-aetna-extra-condensed", serif;
     font-weight: 400;
@@ -7,7 +7,7 @@
 }
 
 @font-face {
-    src: url('../../../../../fonts/babyrayb_cortex_font.woff2') format('woff2');
+    src: url('../font/babyrayb_cortex_font.woff2') format('woff2');
     font-family: "fisterra-fora";
     font-weight: 400;
     font-style: normal;
