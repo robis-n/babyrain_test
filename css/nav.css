@@ -1,12 +1,13 @@
 body {
-    margin-top: 12vh; /* Increase this value to move content further below the navigation bar */
+    margin-top: 15vh; /* Increase this value to move content further below the navigation bar */
 }
 
 .navbar.hidden {
-    top: -12vh; /* Adjust based on your navbar height */
+    top: -15vh; /* Adjust based on your navbar height */
 }
 
 .nav {
+    height: 15vh;
     font-family: "hwt-aetna-extra-condensed", serif;
     opacity: 0.9;
     z-index: 10000000;

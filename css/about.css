@@ -30,13 +30,13 @@ body {
 
 .layout-container {
     flex: 1; /* Added flex grow */
-    padding-top: 0px; /* Add padding to avoid overlap with navbar */
+    padding-top: 0; /* Add padding to avoid overlap with navbar */
     display: flex;
     flex-wrap: wrap;
     gap: 4rem;
     padding: 2rem;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 10vh auto;
 }
 
 .column {
