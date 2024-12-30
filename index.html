@@ -107,15 +107,15 @@
             const width = window.innerWidth;
             let size;
             
-            if (width <= 768) {
+            if (width <= 927) {
                 // Mobile: single column
                 size = Math.min(width - 32, 500);
-            } else if (width <= 1200) {
+            } else if (width >= 1200) {
                 // Tablet: two columns
-                size = Math.min((width - 64) / 2, 500);
+                size = Math.min((width - 96) / 2, 500);
             } else {
                 // Desktop: three columns
-                size = Math.min((width - 96) / 3, 500);
+                size = Math.min((width - 96) / 2, 500);
             }
             
             return { 
