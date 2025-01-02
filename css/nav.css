@@ -2,6 +2,35 @@ body {
     margin-top: 15vh; /* Increase this value to move content further below the navigation bar */
 }
 
+img {
+    width: 25px;
+    height: 25px;
+    vertical-align: middle; /* Add this line */
+    margin-right: 3px; /* Add some spacing between icon and text */
+}
+
+span {
+    align-items: center; /* Center items vertically */
+    justify-content: flex-start; /* Change to flex-start */
+    height: 100%;
+    white-space: nowrap; /* Add this line */
+}
+
+span a {
+    display: inline-flex; /* Add this line */
+    align-items: center; /* Add this line */
+    white-space: nowrap; /* Add this line */
+}
+
+.baywritesrain{
+    font-family: "hwt-aetna-extra-condensed", serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    color: black;
+    text-decoration: underline;
+    white-space: nowrap; /* Add this line */
+}
+
 .navbar.hidden {
     top: -15vh; /* Adjust based on your navbar height */
 }
