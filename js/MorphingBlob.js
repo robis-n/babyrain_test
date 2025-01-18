@@ -17,7 +17,7 @@ class MorphingBlob {
         };
 
         // Add mobile detection
-        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        this.isMobile = /Android|webOS|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
         // Much more aggressive reduction for mobile
         if (this.isMobile) {
