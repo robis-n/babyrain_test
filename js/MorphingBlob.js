@@ -19,10 +19,11 @@ class MorphingBlob {
         // Add mobile detection
         this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
-        // Modify options for mobile
+        // Much more aggressive reduction for mobile
         if (this.isMobile) {
-            this.options.amplitude *= 0.5;  // Reduce amplitude
-            this.options.detail = 2;        // Reduce geometry detail
+            this.options.amplitude *= 0.3;    // Further reduce amplitude
+            this.options.detail = 1;          // Minimal detail
+            this.options.speed *= 0.5;        // Slower animation
         }
 
         this.init();
@@ -58,8 +59,8 @@ class MorphingBlob {
     }
 
     createBlob() {
-        // Adjust geometry detail based on device
-        const segments = this.isMobile ? 32 : 64;
+        // Even lower polygon count for mobile
+        const segments = this.isMobile ? 16 : 64;
         const geometry = new THREE.SphereGeometry(1, segments, segments);
         const material = new THREE.ShaderMaterial({
             uniforms: {
