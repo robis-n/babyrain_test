@@ -218,34 +218,53 @@
             };
         }
 
+        // In your initializeBlobs function:
         function initializeBlobs() {
             const size = getBlobSize();
             
-            // Update wrapper heights to match content
             document.querySelectorAll('.blob-wrapper').forEach(wrapper => {
                 wrapper.style.height = `${size.height}px`;
             });
             
             const colors = [
-                new THREE.Color(0.8, 0.8, 0.5),  // Green tint
-                new THREE.Color(0.9, 0.6, 0.6),  // Purple tint
-                new THREE.Color(1, 0.9, 0.9)   // Pink tint
+                new THREE.Color(0.8, 0.8, 0.5),
+                new THREE.Color(0.9, 0.6, 0.6),
+                new THREE.Color(1, 0.9, 0.9)
             ];
 
+            // Progressive loading for blobs
             document.querySelectorAll('.blob').forEach((blob, index) => {
-                const commonConfig = {
-                    size: size,
-                    amplitude: window.innerWidth <= 768 ? 0.15 : 0.25,
-                    frequency: 0.4,
-                    density: window.innerWidth <= 768 ? 1.8 : 2.5,
-                    strength: window.innerWidth <= 768 ? 0.15 : 0.2,
-                    radius: window.innerWidth <= 768 ? 1.5 : 2.0,
-                    detail: window.innerWidth <= 768 ? 3 : 4,
-                    color: colors[index % colors.length] // Edit colors here
-                };
-                
-                new MorphingBlob(blob.id, commonConfig);
+                setTimeout(() => {
+                    const commonConfig = {
+                        size: size,
+                        amplitude: window.innerWidth <= 768 ? 0.1 : 0.2,    // Reduced amplitude
+                        frequency: 0.3,                                      // Reduced frequency
+                        density: window.innerWidth <= 768 ? 1.5 : 2.0,      // Reduced density
+                        strength: window.innerWidth <= 768 ? 0.1 : 0.15,    // Reduced strength
+                        radius: window.innerWidth <= 768 ? 1.2 : 1.5,       // Reduced radius
+                        detail: window.innerWidth <= 768 ? 2 : 3,           // Reduced detail
+                        color: colors[index % colors.length]
+                    };
+                    
+                    try {
+                        new MorphingBlob(blob.id, commonConfig);
+                    } catch (error) {
+                        console.error(`Failed to create blob ${index}:`, error);
+                        // Fallback to simple colored div if blob creation fails
+                        createFallbackBlob(blob);
+                    }
+                }, index * 100); // Stagger the creation of blobs
             });
+        }
+
+        // Add fallback function
+        function createFallbackBlob(container) {
+            const fallback = document.createElement('div');
+            fallback.style.width = '100%';
+            fallback.style.height = '100%';
+            fallback.style.backgroundColor = '#f0f0f0';
+            fallback.style.borderRadius = '50%';
+            container.appendChild(fallback);
         }
 
         // Make elements visible with a delay

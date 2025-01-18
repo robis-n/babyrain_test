@@ -16,6 +16,15 @@ class MorphingBlob {
             seed: Math.random() * 1000 // Add a random seed for each blob
         };
 
+        // Add mobile detection
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Modify options for mobile
+        if (this.isMobile) {
+            this.options.amplitude *= 0.5;  // Reduce amplitude
+            this.options.detail = 2;        // Reduce geometry detail
+        }
+
         this.init();
     }
 
@@ -27,10 +36,12 @@ class MorphingBlob {
         this.camera = new THREE.PerspectiveCamera(75, this.options.size.width / this.options.size.height, 0.1, 1000);
         this.camera.position.z = 3;
 
-        // Create renderer
+        // Adjust renderer settings for mobile
         this.renderer = new THREE.WebGLRenderer({ 
-            antialias: true, 
-            alpha: true 
+            antialias: !this.isMobile,  // Disable antialiasing on mobile
+            alpha: true,
+            powerPreference: "low-power", // Add power preference
+            precision: this.isMobile ? "lowp" : "highp" // Lower precision on mobile
         });
         this.renderer.setSize(this.options.size.width, this.options.size.height);
         this.renderer.setClearColor(0x000000, 0); // Set alpha to 0 for full transparency
@@ -47,7 +58,9 @@ class MorphingBlob {
     }
 
     createBlob() {
-        const geometry = new THREE.SphereGeometry(1, 64, 64);
+        // Adjust geometry detail based on device
+        const segments = this.isMobile ? 32 : 64;
+        const geometry = new THREE.SphereGeometry(1, segments, segments);
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 time: { value: 0 },
