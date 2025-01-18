@@ -5,16 +5,40 @@ class MorphingBlob {
             throw new Error(`Container with id '${containerId}' not found`);
         }
 
-        // Default options
+        // Add device detection
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        // Adjust config based on device
         this.options = {
             size: options.size || { width: 300, height: 300 },
             color: options.color || new THREE.Color(0.8, 0.7, 0.7),
             speed: options.speed || 1,
-            amplitude: options.amplitude || 0.15,
+            amplitude: this.isMobile ? 0.1 : options.amplitude || 0.15,
             background: options.background || 0x000000,
             opacity: options.opacity || 1,
-            seed: Math.random() * 1000 // Add a random seed for each blob
+            seed: Math.random() * 1000, // Add a random seed for each blob
+            detail: this.isMobile ? 2 : options.detail,
+            density: this.isMobile ? 1.2 : options.density,
+            frequency: this.isMobile ? 0.3 : options.frequency
         };
+
+        // Lower resolution on mobile
+        if (this.isMobile) {
+            this.options.size = {
+                width: Math.floor(options.size.width * 0.75),
+                height: Math.floor(options.size.height * 0.75)
+            };
+        }
+
+        // Initialize renderer with performance settings
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: !this.isMobile,
+            powerPreference: "low-power",
+            precision: this.isMobile ? "lowp" : "mediump"
+        });
+
+        // Set pixel ratio
+        this.renderer.setPixelRatio(this.isMobile ? 1 : window.devicePixelRatio);
 
         this.init();
     }
@@ -28,10 +52,6 @@ class MorphingBlob {
         this.camera.position.z = 3;
 
         // Create renderer
-        this.renderer = new THREE.WebGLRenderer({ 
-            antialias: true, 
-            alpha: true 
-        });
         this.renderer.setSize(this.options.size.width, this.options.size.height);
         this.renderer.setClearColor(0x000000, 0); // Set alpha to 0 for full transparency
         this.container.appendChild(this.renderer.domElement);
@@ -129,5 +149,14 @@ class MorphingBlob {
         this.blob.material.dispose();
         this.renderer.dispose();
         this.container.removeChild(this.renderer.domElement);
+    }
+
+    // Add cleanup method
+    destroy() {
+        if (this.renderer) {
+            this.renderer.dispose();
+            this.geometry.dispose();
+            this.material.dispose();
+        }
     }
 }
