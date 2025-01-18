@@ -151,7 +151,7 @@ p::before {
     top: 50%;
     left: 50%;
     width: 200%;
-    height: 200%;
+    height: 300%;
     transform: translate(-50%, -50%);
     backdrop-filter: blur(12px);
     -webkit-mask-image: radial-gradient(ellipse at center, black 0%, black 20%, transparent 80%);
@@ -173,7 +173,7 @@ body::-webkit-scrollbar {
 .title-page {
     font-family: "hwt-aetna-extra-condensed", serif;
     width: 100%;
-    letter-spacing: 0.6rem;
+    letter-spacing: 0.4rem;
     font-size: 7vw;
     transition: opacity 0.3s ease-out;
     will-change: opacity;
@@ -184,13 +184,14 @@ body::-webkit-scrollbar {
     justify-content: center;
     text-align: center;
     white-space: nowrap;
+    flex-direction: column;
 }
 
 
 .title-text {
     font-style: italic;
     font-size: 3.5vw;
-    margin-bottom: 0; /* Reduce margin */
+    margin-bottom: 1rem; /* Reduce margin */
     color: #333;
     text-decoration: none;
     font-weight: normal;
