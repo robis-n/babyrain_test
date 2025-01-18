@@ -218,65 +218,34 @@
             };
         }
 
-        // In your initializeBlobs function:
         function initializeBlobs() {
             const size = getBlobSize();
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             
+            // Update wrapper heights to match content
             document.querySelectorAll('.blob-wrapper').forEach(wrapper => {
                 wrapper.style.height = `${size.height}px`;
             });
             
             const colors = [
-                new THREE.Color(0.8, 0.8, 0.5),
-                new THREE.Color(0.9, 0.6, 0.6),
-                new THREE.Color(1, 0.9, 0.9)
+                new THREE.Color(0.8, 0.8, 0.5),  // Green tint
+                new THREE.Color(0.9, 0.6, 0.6),  // Purple tint
+                new THREE.Color(1, 0.9, 0.9)   // Pink tint
             ];
 
-            // Load fewer blobs at once on mobile
-            const blobElements = Array.from(document.querySelectorAll('.blob'));
-            const batchSize = isMobile ? 3 : blobElements.length;
-
-            function loadBlobBatch(startIndex) {
-                for(let i = startIndex; i < Math.min(startIndex + batchSize, blobElements.length); i++) {
-                    const blob = blobElements[i];
-                    const commonConfig = {
-                        size: size,
-                        amplitude: isMobile ? 0.05 : 0.2,     // Much smaller amplitude
-                        frequency: 0.2,                       // Slower frequency
-                        density: isMobile ? 1.2 : 2.0,        // Lower density
-                        strength: isMobile ? 0.05 : 0.15,     // Much lower strength
-                        radius: isMobile ? 1.0 : 1.5,         // Smaller radius
-                        detail: isMobile ? 1 : 3,             // Minimum detail on mobile
-                        color: colors[i % colors.length]
-                    };
-                    
-                    try {
-                        new MorphingBlob(blob.id, commonConfig);
-                    } catch (error) {
-                        console.error(`Failed to create blob ${i}:`, error);
-                        createFallbackBlob(blob);
-                    }
-                }
-
-                // Load next batch if on mobile
-                if (isMobile && startIndex + batchSize < blobElements.length) {
-                    setTimeout(() => loadBlobBatch(startIndex + batchSize), 1000);
-                }
-            }
-
-            // Start loading first batch
-            loadBlobBatch(0);
-        }
-
-        // Add fallback function
-        function createFallbackBlob(container) {
-            const fallback = document.createElement('div');
-            fallback.style.width = '100%';
-            fallback.style.height = '100%';
-            fallback.style.backgroundColor = '#f0f0f0';
-            fallback.style.borderRadius = '50%';
-            container.appendChild(fallback);
+            document.querySelectorAll('.blob').forEach((blob, index) => {
+                const commonConfig = {
+                    size: size,
+                    amplitude: window.innerWidth <= 768 ? 0.15 : 0.25,
+                    frequency: 0.4,
+                    density: window.innerWidth <= 768 ? 1.8 : 2.5,
+                    strength: window.innerWidth <= 768 ? 0.15 : 0.2,
+                    radius: window.innerWidth <= 768 ? 1.5 : 2.0,
+                    detail: window.innerWidth <= 768 ? 3 : 4,
+                    color: colors[index % colors.length] // Edit colors here
+                };
+                
+                new MorphingBlob(blob.id, commonConfig);
+            });
         }
 
         // Make elements visible with a delay
