@@ -8,12 +8,19 @@ class MorphingBlob {
         // Specific Android detection
         this.isAndroid = /Android/i.test(navigator.userAgent);
         
+        // Enhanced mobile detection
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        this.isLowEnd = this.isMobile || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+        
         // Base configuration with reduced complexity
         this.options = {
-            size: options.size || { width: 300, height: 300 },
+            size: options.size || { 
+                width: this.isMobile ? window.innerWidth * 0.8 : 300,
+                height: this.isMobile ? window.innerWidth * 0.8 : 300
+            },
             color: options.color || new THREE.Color(0.8, 0.7, 0.7),
-            speed: this.isAndroid ? 0.5 : (options.speed || 1),
-            amplitude: this.isAndroid ? 0.05 : (options.amplitude || 0.15),
+            speed: this.isLowEnd ? 0.3 : (options.speed || 1),
+            amplitude: this.isLowEnd ? 0.03 : (options.amplitude || 0.15),
             background: options.background || 0x000000,
             opacity: options.opacity || 1,
             seed: Math.random() * 1000,
@@ -22,17 +29,20 @@ class MorphingBlob {
             frequency: this.isAndroid ? 0.2 : (options.frequency || 0.4)
         };
 
-        // Enhanced renderer optimizations
+        // Mobile-optimized renderer
         this.renderer = new THREE.WebGLRenderer({
             antialias: false, // Disable antialiasing completely
             powerPreference: "low-power",
-            precision: "lowp", // Always use low precision
+            precision: this.isLowEnd ? "lowp" : "mediump", // Always use low precision
             alpha: true,
             stencil: false,
-            depth: false // Disable depth testing since we only have one object
+            depth: false, // Disable depth testing since we only have one object
+            failIfMajorPerformanceCaveat: false // Allow software rendering fallback
         });
 
-        this.renderer.setPixelRatio(1); // Force 1:1 pixel ratio
+        // Force lower resolution on mobile
+        const pixelRatio = this.isLowEnd ? 0.75 : 1;
+        this.renderer.setPixelRatio(pixelRatio);
         this.renderer.setSize(this.options.size.width, this.options.size.height);
         
         // Enable automatic garbage collection
@@ -54,8 +64,13 @@ class MorphingBlob {
         this.scene = new THREE.Scene();
         
         // Create camera
-        this.camera = new THREE.PerspectiveCamera(75, this.options.size.width / this.options.size.height, 0.1, 1000);
-        this.camera.position.z = 3;
+        this.camera = new THREE.PerspectiveCamera(
+            this.isMobile ? 60 : 75,
+            this.options.size.width / this.options.size.height,
+            0.1,
+            1000
+        );
+        this.camera.position.z = this.isMobile ? 4 : 3;
 
         // Create renderer
         this.renderer.setSize(this.options.size.width, this.options.size.height);
@@ -71,7 +86,7 @@ class MorphingBlob {
 
     createBlob() {
         // Minimal geometry settings
-        const segments = this.isAndroid ? 16 : 24; // Further reduced segments
+        const segments = this.isLowEnd ? 12 : 24; // Further reduced segments
         const geometry = new THREE.SphereGeometry(1, segments, segments);
         const material = new THREE.ShaderMaterial({
             uniforms: {
@@ -80,6 +95,10 @@ class MorphingBlob {
                 seed: { value: this.options.seed }
             },
             vertexShader: `
+                #ifdef GL_ES
+                precision ${this.isLowEnd ? 'lowp' : 'mediump'} float;
+                #endif
+                
                 uniform float time;
                 uniform float seed;
                 varying vec3 vNormal;
@@ -93,6 +112,10 @@ class MorphingBlob {
                 }
             `,
             fragmentShader: `
+                #ifdef GL_ES
+                precision ${this.isLowEnd ? 'lowp' : 'mediump'} float;
+                #endif
+                
                 uniform vec3 color;
                 varying vec3 vNormal;
                 
@@ -124,13 +147,14 @@ class MorphingBlob {
     animate() {
         const animate = (time) => {
             requestAnimationFrame(animate);
-            time *= 0.001 * this.options.speed;
-            this.blob.material.uniforms.time.value = time;
             
-            // Reduce rotation calculations
-            this.blob.rotation.y = time * 0.2;
-            
-            this.renderer.render(this.scene, this.camera);
+            // Reduce animation complexity on mobile
+            if (!this.isLowEnd || document.hasFocus()) {
+                time *= 0.001 * this.options.speed;
+                this.blob.material.uniforms.time.value = time;
+                this.blob.rotation.y = time * 0.2;
+                this.renderer.render(this.scene, this.camera);
+            }
         };
 
         animate(0);
