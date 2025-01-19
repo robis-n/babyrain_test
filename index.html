@@ -197,29 +197,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="js/MorphingBlob.js"></script>
     <script>
-        const activeBlobs = new Map();
-        const MAX_CONTEXTS = 6; // Increase from 4 to 6
-        const CHUNK_DELAY = 500; // Decrease from 1000 to 500
-        let contextCount = 0;
-        const colors = [
-            new THREE.Color(0.8, 0.8, 0.5),
-            new THREE.Color(0.9, 0.6, 0.6),
-            new THREE.Color(1, 0.9, 0.9)
-        ];
-
-        function createFallbackBlob(container, color) {
-            const fallback = document.createElement('div');
-            fallback.style.width = '100%';
-            fallback.style.height = '100%';
-            fallback.style.background = `radial-gradient(circle at 30% 30%, 
-                rgba(${color.r * 255}, ${color.g * 255}, ${color.b * 255}, 0.8),
-                rgba(${color.r * 255}, ${color.g * 255}, ${color.b * 255}, 0.3))`;
-            fallback.style.borderRadius = '50%';
-            fallback.style.animation = 'pulse 4s infinite';
-            container.innerHTML = '';
-            container.appendChild(fallback);
-        }
-
         function getBlobSize() {
             const width = window.innerWidth;
             let size;
@@ -242,61 +219,33 @@
         }
 
         function initializeBlobs() {
-            // Clean up existing blobs
-            activeBlobs.forEach(blob => blob.dispose());
-            activeBlobs.clear();
-            contextCount = 0;
-
             const size = getBlobSize();
-            const isAndroid = /Android/i.test(navigator.userAgent);
             
-            // Update wrapper heights
+            // Update wrapper heights to match content
             document.querySelectorAll('.blob-wrapper').forEach(wrapper => {
                 wrapper.style.height = `${size.height}px`;
             });
+            
+            const colors = [
+                new THREE.Color(0.8, 0.8, 0.5),  // Green tint
+                new THREE.Color(0.9, 0.6, 0.6),  // Purple tint
+                new THREE.Color(1, 0.9, 0.9)   // Pink tint
+            ];
 
-            // Process blobs in smaller chunks
-            const blobElements = Array.from(document.querySelectorAll('.blob'));
-            const chunkSize = isAndroid ? 2 : Math.min(6, MAX_CONTEXTS); // Increase chunk size
-
-            function loadChunk(startIndex) {
-                if (startIndex >= blobElements.length || contextCount >= MAX_CONTEXTS) return;
-
-                const endIndex = Math.min(startIndex + chunkSize, blobElements.length);
+            document.querySelectorAll('.blob').forEach((blob, index) => {
+                const commonConfig = {
+                    size: size,
+                    amplitude: window.innerWidth <= 768 ? 0.03 : 0.1,     // Reduced further
+                    frequency: 0.1,                                        // Reduced further
+                    density: window.innerWidth <= 768 ? 0.8 : 1,        // Reduced further
+                    strength: window.innerWidth <= 768 ? 0.05 : 0.1,      // Reduced further
+                    radius: window.innerWidth <= 768 ? 1.0 : 1,         // Reduced further
+                    detail: window.innerWidth <= 768 ? 1 : 1,             // Minimum detail
+                    color: colors[index % colors.length]
+                };
                 
-                for (let i = startIndex; i < endIndex; i++) {
-                    if (contextCount >= MAX_CONTEXTS) break;
-                    
-                    const blob = blobElements[i];
-                    if (!blob || activeBlobs.has(blob.id)) continue;
-
-                    try {
-                        const blobInstance = new MorphingBlob(blob.id, {
-                            size: size,
-                            amplitude: isAndroid ? 0.05 : 0.25,
-                            frequency: isAndroid ? 0.2 : 0.4,
-                            density: isAndroid ? 1.2 : 2.5,
-                            strength: isAndroid ? 0.05 : 0.2,
-                            radius: isAndroid ? 1.0 : 2.0,
-                            detail: isAndroid ? 1 : 4,
-                            color: new THREE.Color(0.8, 0.8, 0.5)
-                        });
-                        
-                        activeBlobs.set(blob.id, blobInstance);
-                        contextCount++;
-                    } catch (error) {
-                        console.error(`Failed to create blob ${i}:`, error);
-                        createFallbackBlob(blob);
-                    }
-                }
-
-                // Schedule next chunk with increased delay
-                if (endIndex < blobElements.length && contextCount < MAX_CONTEXTS) {
-                    setTimeout(() => loadChunk(endIndex), CHUNK_DELAY);
-                }
-            }
-
-            loadChunk(0);
+                new MorphingBlob(blob.id, commonConfig);
+            });
         }
 
         // Make elements visible with a delay
@@ -316,10 +265,6 @@
             setTimeout(() => {
                 initializeBlobs();
                 makeVisible();
-                // Reattach observers after initialization
-                document.querySelectorAll('.column').forEach(column => {
-                    visibilityObserver.observe(column);
-                });
             }, 100);
         });
 
@@ -328,101 +273,11 @@
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                // Clean up old blobs properly
-                activeBlobs.forEach(blob => {
-                    blob.dispose();
-                });
-                activeBlobs.clear();
-                
+                // Remove old blobs
+                document.querySelectorAll('.blob-container canvas').forEach(canvas => canvas.remove());
                 // Reinitialize with new size
                 initializeBlobs();
             }, 250); // Debounce resize events
-        });
-
-        // Clean up when leaving page
-        window.addEventListener('beforeunload', () => {
-            activeBlobs.forEach(blob => {
-                blob.dispose();
-            });
-            activeBlobs.clear();
-        });
-
-        // Add this function before the visibility observer
-        function initializeBlob(container, index) {
-            const size = getBlobSize();
-            const isAndroid = /Android/i.test(navigator.userAgent);
-            
-            // Check if we're at the context limit
-            if (contextCount >= MAX_CONTEXTS) {
-                // Remove oldest blob
-                const oldestId = Array.from(activeBlobs.keys())[0];
-                if (oldestId) {
-                    const oldBlob = activeBlobs.get(oldestId);
-                    oldBlob.dispose();
-                    activeBlobs.delete(oldestId);
-                    contextCount--;
-                }
-            }
-
-            try {
-                const blobElement = container.querySelector('.blob');
-                const commonConfig = {
-                    size: size,
-                    amplitude: isAndroid ? 0.05 : 0.25,
-                    frequency: isAndroid ? 0.2 : 0.4,
-                    density: isAndroid ? 1.2 : 2.5,
-                    strength: isAndroid ? 0.05 : 0.2,
-                    radius: isAndroid ? 1.0 : 2.0,
-                    detail: isAndroid ? 1 : 4,
-                    color: new THREE.Color(
-                        0.8 + (index * 0.1) % 0.3,
-                        0.6 + (index * 0.1) % 0.3,
-                        0.6 + (index * 0.1) % 0.3
-                    )
-                };
-
-                const blobInstance = new MorphingBlob(blobElement.id, commonConfig);
-                activeBlobs.set(blobElement.id, blobInstance);
-                contextCount++;
-            } catch (error) {
-                console.error(`Failed to initialize blob ${index}:`, error);
-                createFallbackBlob(container, colors[index % colors.length]);
-            }
-        }
-
-        // Update the visibility observer
-        const visibilityObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const blobContainer = entry.target;
-                const blobElement = blobContainer.querySelector('.blob');
-                if (!blobElement) return;
-
-                const blobId = blobElement.id;
-                const blob = activeBlobs.get(blobId);
-                const index = parseInt(blobId.replace('blob', '')) - 1;
-                
-                if (entry.isIntersecting) {
-                    if (!blob || blob.isDisposed) {
-                        // Only create new blob if we're under the context limit
-                        if (contextCount < MAX_CONTEXTS) {
-                            initializeBlob(blobContainer, index);
-                        }
-                    }
-                } else if (blob) {
-                    // Dispose blob when not visible
-                    blob.dispose();
-                    activeBlobs.delete(blobId);
-                    contextCount--;
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '100px'
-        });
-
-        // Add observer attachment
-        document.querySelectorAll('.column').forEach(column => {
-            visibilityObserver.observe(column);
         });
     </script>
 </body>
