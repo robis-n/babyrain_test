@@ -84,27 +84,17 @@
 
             camera.position.z = 3;
 
-            // Animation loop
-            function animate(time) {
-                requestAnimationFrame(animate);
-                
-                time *= 0.001; // Convert to seconds
-                material.uniforms.time.value = time;
-                
-                blob.rotation.x = time * 0.3;
-                blob.rotation.y = time * 0.5;
-                
-                renderer.render(scene, camera);
-            }
+            // Static render instead of animation
+            material.uniforms.time.value = 0;
+            renderer.render(scene, camera);
 
             // Handle window resize
             window.addEventListener('resize', function() {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.render(scene, camera);  // Re-render on resize
             });
-
-            animate(0);
         });
     </script>
 </body>
