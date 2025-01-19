@@ -202,83 +202,44 @@
             let size;
             
             if (width <= 927) {
-                // Mobile: single column
                 size = Math.min(width - 32, 500);
             } else if (width >= 1200) {
-                // Tablet: two columns
                 size = Math.min((width - 96) / 2, 500);
             } else {
-                // Desktop: three columns
                 size = Math.min((width - 96) / 2, 500);
             }
             
             return { 
                 width: size,
-                height: size // Make it square
+                height: size
             };
         }
 
+        // Simple initialization function
         function initializeBlobs() {
             const size = getBlobSize();
             
-            // Update wrapper heights to match content
+            // Set static heights
             document.querySelectorAll('.blob-wrapper').forEach(wrapper => {
                 wrapper.style.height = `${size.height}px`;
             });
             
             const colors = [
-                new THREE.Color(0.8, 0.8, 0.5),  // Green tint
-                new THREE.Color(0.9, 0.6, 0.6),  // Purple tint
-                new THREE.Color(1, 0.9, 0.9)   // Pink tint
+                new THREE.Color(0.8, 0.8, 0.5),
+                new THREE.Color(0.9, 0.6, 0.6),
+                new THREE.Color(1, 0.9, 0.9)
             ];
 
             document.querySelectorAll('.blob').forEach((blob, index) => {
-                const commonConfig = {
+                new MorphingBlob(blob.id, {
                     size: size,
-                    amplitude: window.innerWidth <= 768 ? 0.03 : 0.1,     // Reduced further
-                    frequency: 0.1,                                        // Reduced further
-                    density: window.innerWidth <= 768 ? 0.8 : 1,        // Reduced further
-                    strength: window.innerWidth <= 768 ? 0.05 : 0.1,      // Reduced further
-                    radius: window.innerWidth <= 768 ? 1.0 : 1,         // Reduced further
-                    detail: window.innerWidth <= 768 ? 1 : 1,             // Minimum detail
                     color: colors[index % colors.length]
-                };
-                
-                new MorphingBlob(blob.id, commonConfig);
+                });
             });
         }
 
-        // Make elements visible with a delay
-        function makeVisible() {
-            document.querySelectorAll('.column').forEach((column, index) => {
-                setTimeout(() => {
-                    column.classList.add('visible');
-                    column.querySelector('.blob-container').classList.add('visible');
-                    column.querySelector('.text-content').classList.add('visible');
-                }, index * 200);
-            });
-        }
-
-        // Initialize and make visible when page loads
-        window.addEventListener('load', () => {
-            // Small delay to ensure content is properly laid out
-            setTimeout(() => {
-                initializeBlobs();
-                makeVisible();
-            }, 100);
-        });
-
-        // Reinitialize blobs when window is resized
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                // Remove old blobs
-                document.querySelectorAll('.blob-container canvas').forEach(canvas => canvas.remove());
-                // Reinitialize with new size
-                initializeBlobs();
-            }, 250); // Debounce resize events
-        });
+        // Initialize once when page loads
+        window.addEventListener('load', initializeBlobs);
     </script>
 </body>
 </html>
