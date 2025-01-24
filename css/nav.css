@@ -39,7 +39,7 @@ span a {
     height: 15vh;
     font-family: "hwt-aetna-extra-condensed", serif;
     opacity: 0.9;
-    z-index: 10000000;
+    z-index: 10000000000000000;
     width: 100%;
     height: auto; /* Adjust height to fit content */
     position: fixed;
