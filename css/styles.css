@@ -1,4 +1,3 @@
-
 html, body {
     font-family: "EB Garamond", serif;
     font-optical-sizing: auto;
@@ -107,14 +106,30 @@ body {
     justify-content: center;
 }
 
-.blob-container {
+.background-image {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
+    background-image: url('../spehere.png'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    opacity: 0.8;
     z-index: 0;
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 30%, transparent 70%);
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 30%, transparent 70%);
+}
+
+.background-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);
+    z-index: -1;
 }
 
 .text-content {
@@ -145,7 +160,7 @@ p {
     padding: 0;
 }
 
-p::before {
+.text-content::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -153,11 +168,11 @@ p::before {
     width: 200%;
     height: 300%;
     transform: translate(-50%, -50%);
-    backdrop-filter: blur(12px);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 0%, black 20%, transparent 80%);
-    mask-image: radial-gradient(ellipse at center, black 0%, black 20%, transparent 80%);
+    backdrop-filter: blur(15px);  /* Increased blur slightly */
+    -webkit-mask-image: radial-gradient(ellipse at center, black 0%, black 30%, transparent 70%);  /* Adjusted gradient */
+    mask-image: radial-gradient(ellipse at center, black 0%, black 30%, transparent 70%);  /* Adjusted gradient */
     z-index: -1;
-    background: rgba(255, 255, 255, 0.658);
+    background: rgba(255, 255, 255, 0.75);  /* Increased opacity slightly */
 }
 
 .italic {
